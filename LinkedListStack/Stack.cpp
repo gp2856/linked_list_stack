@@ -47,25 +47,35 @@ Stack::Stack(const Stack & source)
 Stack & Stack::operator=(const Stack & source)
 {
 	size = source.size;
+	// Get a pointer to the head of source
+	Node *pSource = source.head;
 
-	// If there is no head or the head is the only node on the stack,
-	// Just default to null
-	if (source.head == nullptr)
-	{
+	if (pSource == nullptr)
+	{// if source.head is nullptr, new head is nullptr
+
 		head = nullptr;
 	}
-	else if (source.head->next == nullptr)
+	else
+	{// Otherwise, allocate memory for the new head and copy the source head
+
+		head = new Node(pSource->value, nullptr);
+	}
+
+	// After we copy the head, we need to traverse the linked list
+	// Allocate memory for each node and copy the value
+	// but we need to make sure our copy is pointing to newly allocated nodes
+	// If the head is the only node on the source list, we don't need to do anything else
+	pSource = pSource->next;
+
+	if (pSource == nullptr)
 	{
-		head->next = nullptr;
+		head->next = new Node(pSource->value, nullptr);
 	}
 	else
 	{
-		// Starting from the second node
-		Node *pSource = source.head->next;
-		Node *pDest = head->next;
-
-		// Until we reach a nullptr
-		while (pSource != nullptr)
+		// start at the head
+		Node *pDest = head;
+		while (pSource)
 		{
 			// Allocate memory for the new node
 			Node *n = new Node(pSource->value, nullptr);
